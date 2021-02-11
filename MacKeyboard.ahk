@@ -7,7 +7,154 @@
 ; --------------------------------------------------------------
 ; ! = ALT
 ; ^ = CTRL
-; + = SHIFT
+; + = SHIFT; --------------------------------------------------------------
+; Application specific
+; --------------------------------------------------------------
+
+; Google Chrome
+#IfWinActive, ahk_class Chrome_WidgetWin_1
+
+; Show Web Developer Tools with cmd + alt + i
+#!i::Send {F12}
+
+; Show source code with cmd + alt + u
+#!u::Send ^u
+
+; Restore tab
+!+t::Send ^+t
+
+; Refresh with cmd + r
+!r::Send ^r
+
+; Easier tab switching
+!+[::Send ^{PgUp}
+!+]::Send ^{PgDn}
+
+#IfWinActive
+
+; Visual Studio Code
+#IfWinActive, ahk_exe Code.exe
+
+; Comments
+!/::Send ^/
+
+; System default is stupid for cmd + p
+!p::Send ^p
+
+#IfWinActive
+
+#IfWinActive, ahk_exe Terminus.exe
+^u::Send ^{Home}
+^e::Send {End}
+^a::Send {Home}
+#IfWinActive
+
+; --------------------------------------------------------------
+; OS X system shortcuts
+; --------------------------------------------------------------
+
+; Make Ctrl + S work with cmd (windows) key
+!s::Send ^s
+
+; Selecting
+!a::Send ^a
+
+; Copying
+!c::Send ^c
+
+; Pasting
+!v::Send ^v
+
+; Cutting
+!x::Send ^x
+
+; Opening
+#o::^o
+
+; Finding
+!f::Send ^f
+
+; Undo
+!z::Send ^z
+
+; Redo
+!+z::Send ^y
+
+; New tab
+!t::Send ^t
+
+; close tab
+!w::Send ^w
+
+; Preferences
+!,::Send ^,
+
+; Close windows (cmd + q to Alt + F4)
+!q::Send !{F4}
+
+; minimize windows
+!m::WinMinimize,a
+
+; emoji picker
+!^Space::Send #.
+
+; muthafuckin dash
+!+-::Send —
+
+; nuthafuckin dash
+!-::Send –
+
+; Toggle always on top, alt + i
+!i::
+MouseGetPos,,, MouseWin
+WinSet, AlwaysOnTop, Toggle, ahk_id %MouseWin%
+return
+
+; capslock is the OG control key
+Capslock::Ctrl
+
+; --------------------------------------------------------------
+; Set Transparency of Windows
+; --------------------------------------------------------------
+
+^+WheelUp:: SetTransparency(10)
+^+WheelDown:: SetTransparency(-10)
+
+SetTransparency(Alpha)
+{
+    WinGet, WinID, ID, A
+    WinGetClass, WinClass, A
+    WinGet, Trans, Transparent, ahk_id %WinID%
+    
+    ; Don't make Transparent those special Windows
+    if(WinID = "" || WinClass = "Progman" || WinClass = "Shell_TrayWnd" || WinClass = "WorkerW" || WinClass = "MsgrIMEWindowClass")
+        return
+    
+    ; Set Transparency On
+    if(Trans = "")
+        Trans := 250
+    
+    ; Set Transparency Level
+    Trans := Trans + Alpha
+    if(Trans < 30)
+        Trans := 30
+        
+    if(Trans >= 255)
+        Trans := "Off"
+    
+    ToolTip, % "Transparency: " Trans
+    SetTimer, ReSetToolTip, 1000
+    WinSet, Transparent, %Trans%, ahk_id %WinID%
+}
+
+; Clear the ToolTip
+ReSetToolTip:
+    ToolTip
+    SetTimer, ReSetToolTip, Off
+return
+; End Transparency
+
+
 ; # = WIN
 ;
 ; Debug action snippet: MsgBox You pressed Control-A while Notepad is active.
